@@ -11,12 +11,15 @@ using namespace std;
 class Timer {
 public:
     void start() {
+        //begin timer
         startTime = chrono::high_resolution_clock::now();
         running = true;
     }
 
     void pause() {
+        //if currently running
         if (running) {
+            //when paused, add the elapsed time to the total for displaying
             tempTime = chrono::high_resolution_clock::now();
             totalTime += tempTime - startTime;
             running = false;
@@ -24,28 +27,61 @@ public:
     }
 
     void resume() {
+        //if not running
         if (!running) {
+            //resets startTime to hold new time point
             startTime = chrono::high_resolution_clock::now();
             running = true;
         }
     }
     
     string getTime() {
-        auto currentTime = chrono::high_resolution_clock::now();
-        auto duration = currentTime - startTime;
-        int secondsTotal = chrono::duration_cast<chrono::seconds>(duration).count();
-        string clock = "";
-        int minutes = (secondsTotal / 60);
-        int seconds = (secondsTotal % 60);
-        if (minutes < 10) {
-            clock += "0";
+        if (running) {
+            //time that has passed
+            auto currentTime = chrono::high_resolution_clock::now();
+            //add total elapsed to the time that has passed since last start
+            auto duration = totalTime + (currentTime - startTime);
+            int secondsTotal = chrono::duration_cast<chrono::seconds>(duration).count();
+            string clock = "";
+            int minutes = (secondsTotal / 60);
+            int seconds = (secondsTotal % 60);
+            if (minutes < 10) {
+                clock += "0";
+            }
+            clock += to_string(minutes);
+            if (seconds < 10) {
+                clock += "0";
+            }
+            clock += to_string(seconds);
+            return clock;
         }
-        clock += to_string(minutes);
-        if (seconds < 10) {
-            clock += "0";
+        else {
+            int secondsTotal = chrono::duration_cast<chrono::seconds>(totalTime).count();
+            string clock = "";
+            int minutes = (secondsTotal / 60);
+            int seconds = (secondsTotal % 60);
+            if (minutes < 10) {
+                clock += "0";
+            }
+            clock += to_string(minutes);
+            if (seconds < 10) {
+                clock += "0";
+            }
+            clock += to_string(seconds);
+            return clock;
         }
-        clock += to_string(seconds);
-        return clock;
+        // string clock = "";
+        // int minutes = (secondsTotal / 60);
+        // int seconds = (secondsTotal % 60);
+        // if (minutes < 10) {
+        //     clock += "0";
+        // }
+        // clock += to_string(minutes);
+        // if (seconds < 10) {
+        //     clock += "0";
+        // }
+        // clock += to_string(seconds);
+        // return clock;
     }
 
 private:
@@ -199,7 +235,7 @@ int main() {
                     else {
                         timer.resume();
                     }
-                }
+                }   
             }
         }
         game.clear();
