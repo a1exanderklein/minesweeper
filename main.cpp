@@ -88,13 +88,17 @@ void drawCounter(sf::RenderWindow& window, sf::Texture& digitsTx, int numMines, 
     float x, y;
     int digit1, digit2, digit3;    
     
-    digit1 = count / 100;
-    digit2 = count / 10;
-    digit3 = count % 10;
+    digit1 = abs(count / 100);
+    digit2 = abs(count / 10);
+    digit3 = abs(count % 10);
 
     x = 33;
     y = 32 * (numRow + 0.5f) + 16;
 
+    if (count < 0) {
+        digit1 = 10;
+    }
+    
     sf::IntRect rect1(digit1 * 21, 0, 21, 32);
     sf::Sprite digitSprite1(digitsTx, rect1);
     digitSprite1.setPosition(x, y);
