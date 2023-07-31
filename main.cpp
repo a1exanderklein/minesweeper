@@ -82,13 +82,15 @@ private:
     bool running = false;
 };
 
-void drawCounter(sf::RenderWindow& window, sf::Texture& digitsTx, int numMines, float numCol, float numRow) {
+void drawCounter(sf::RenderWindow& window, sf::Texture& digitsTx, int numMines, int numFlags, float numCol, float numRow) {
+    int count = numMines - numFlags;
+    
     float x, y;
     int digit1, digit2, digit3;    
     
-    digit1 = numMines / 100;
-    digit2 = numMines / 10;
-    digit3 = numMines % 10;
+    digit1 = count / 100;
+    digit2 = count / 10;
+    digit3 = count % 10;
 
     x = 33;
     y = 32 * (numRow + 0.5f) + 16;
@@ -163,7 +165,7 @@ int main() {
     sf::RenderWindow game(sf::VideoMode(width, height), "Minesweeper", sf::Style::Close);
     
     //Background
-    sf::RectangleShape backgroundShape(sf::Vector2f(width, height));
+    sf::RectangleShape backgroundShape(sf::Vector2f(width, height - 100));
     backgroundShape.setFillColor(sf::Color(200, 200, 200));
     sf::RectangleShape buttonDeck(sf::Vector2f(width, 100));
     buttonDeck.setPosition(0, height - 100);
@@ -212,14 +214,15 @@ int main() {
     
     while (game.isOpen()) {
         sf::Event event;
+        int numFlags = board.getNumFlags();
         while (game.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 game.close();
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 auto clickCoordinates = sf::Mouse::getPosition(game);
-                cout << "X: " << clickCoordinates.x << endl;
-                cout << "Y: " << clickCoordinates.y << endl << endl;
+                // cout << "X: " << clickCoordinates.x << endl;
+                // cout << "Y: " << clickCoordinates.y << endl << endl;
 
                 //Pausing Mechanics
                 if (playButton.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
@@ -238,7 +241,7 @@ int main() {
                     if (event.mouseButton.button == sf::Mouse::Right) {
                         int col = static_cast<int>(clickCoordinates.x) / 32;
                         int row = static_cast<int>(clickCoordinates.y) / 32;
-                        int tileNumber = static_cast<int>(numCol * row + col);
+                        int tileNumber = static_cast<int>(numRow * col + row);
                         board.setFlag(tileNumber);
                     }
                 }
@@ -252,7 +255,7 @@ int main() {
         game.draw(debug);
         game.draw(playButton);
         game.draw(leaderboard);
-        drawCounter(game, digitsTx, numMines, numCol, numRow);
+        drawCounter(game, digitsTx, numMines, numFlags, numCol, numRow);
         drawTimer(game, digitsTx, numCol, numRow, timer.getTime());
         game.display();
     }

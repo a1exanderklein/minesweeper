@@ -9,6 +9,7 @@ public:
     Board(sf::RenderWindow& window, float numTiles, float numCol, float numRow);
     void drawBoard();
     void setFlag(int tileNumber);
+    int getNumFlags();
 
 private:
     sf::RenderWindow& window;

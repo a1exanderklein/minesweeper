@@ -19,3 +19,13 @@ void Board::drawBoard() {
 void Board::setFlag(int tileNumber) {
     tiles[tileNumber].flag();
 }
+
+int Board::getNumFlags() {
+    int numFlags = 0;
+    for (int i = 0; i < tiles.size(); i++) {
+        if (tiles[i].getState() == FLAGGED) {
+            numFlags++;
+        }
+    }
+    return numFlags;
+}

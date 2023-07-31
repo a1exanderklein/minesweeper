@@ -17,15 +17,21 @@ void Tile::drawState(sf::RenderWindow& window) {
     if (state == REVEALED) {
         spriteTile.setTexture(revealedTx);
     }
+    spriteTile.setPosition(position);
+    window.draw(spriteTile);
+
     if (state == FLAGGED) {
         sf::Sprite flagSprite(flagTx);
         flagSprite.setPosition(position);
         window.draw(flagSprite);
     }
-    spriteTile.setPosition(position);
-    window.draw(spriteTile);
 
 }
+
+State Tile::getState() {
+    return state;
+}
+
 
 void Tile::flag() {
     if (state == HIDDEN) {
