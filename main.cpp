@@ -4,7 +4,10 @@
 #include <cctype>
 #include <fstream>
 #include <chrono>
+#include <vector>
 #include "WelcomeWindow.h"
+#include "tiles.h"
+#include "board.h"
 
 using namespace std;
 
@@ -70,18 +73,6 @@ public:
             clock += to_string(seconds);
             return clock;
         }
-        // string clock = "";
-        // int minutes = (secondsTotal / 60);
-        // int seconds = (secondsTotal % 60);
-        // if (minutes < 10) {
-        //     clock += "0";
-        // }
-        // clock += to_string(minutes);
-        // if (seconds < 10) {
-        //     clock += "0";
-        // }
-        // clock += to_string(seconds);
-        // return clock;
     }
 
 private:
@@ -167,7 +158,7 @@ int main() {
 
     float width = numCol * 32;
     float height = ( numRow * 32 ) + 100;
-    float tileCount = numCol * numRow;
+    float numTiles = numCol * numRow;
     
     sf::RenderWindow game(sf::VideoMode(width, height), "Minesweeper", sf::Style::Close);
     
@@ -216,6 +207,9 @@ int main() {
     Timer timer;
     timer.start();
     bool paused = false;
+
+    Board board(game, numTiles, numCol, numRow);
+    
     while (game.isOpen()) {
         sf::Event event;
         while (game.pollEvent(event)) {
@@ -224,6 +218,8 @@ int main() {
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 auto clickCoordinates = sf::Mouse::getPosition(game);
+                cout << "X: " << clickCoordinates.x << endl;
+                cout << "Y: " << clickCoordinates.y << endl << endl;
 
                 //Pausing Mechanics
                 if (playButton.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
@@ -235,12 +231,23 @@ int main() {
                     else {
                         timer.resume();
                     }
-                }   
+                }
+
+                //Flagging
+                if (backgroundShape.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                    if (event.mouseButton.button == sf::Mouse::Right) {
+                        int col = static_cast<int>(clickCoordinates.x) / 32;
+                        int row = static_cast<int>(clickCoordinates.y) / 32;
+                        int tileNumber = static_cast<int>(numCol * row + col);
+                        board.setFlag(tileNumber);
+                    }
+                }
             }
         }
         game.clear();
         game.draw(backgroundShape);
         game.draw(buttonDeck);
+        board.drawBoard();
         game.draw(happyFace);
         game.draw(debug);
         game.draw(playButton);
@@ -249,7 +256,6 @@ int main() {
         drawTimer(game, digitsTx, numCol, numRow, timer.getTime());
         game.display();
     }
-
 
     return 0;
 }
