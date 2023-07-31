@@ -8,8 +8,9 @@ class Board {
 public:    
     Board(sf::RenderWindow& window, float numTiles, float numCol, float numRow);
     void drawBoard();
-    void setFlag(int tileNumber);
     int getNumFlags();
+    void setFlag(int tileNumber);
+    void setReveal(int tileNumber);
 
 private:
     sf::RenderWindow& window;

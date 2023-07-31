@@ -16,6 +16,7 @@ public:
     void drawState(sf::RenderWindow& window);
     State getState();
     void flag();
+    void reveal();
     
 private:
     vector<Tile*> adjacent;

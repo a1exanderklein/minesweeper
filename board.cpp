@@ -16,9 +16,6 @@ void Board::drawBoard() {
     }
 }
 
-void Board::setFlag(int tileNumber) {
-    tiles[tileNumber].flag();
-}
 
 int Board::getNumFlags() {
     int numFlags = 0;
@@ -28,4 +25,12 @@ int Board::getNumFlags() {
         }
     }
     return numFlags;
+}
+
+void Board::setFlag(int tileNumber) {
+    tiles[tileNumber].flag();
+}
+
+void Board::setReveal(int tileNumber) {
+    tiles[tileNumber].reveal();
 }

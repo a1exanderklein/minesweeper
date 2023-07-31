@@ -41,3 +41,9 @@ void Tile::flag() {
         state = HIDDEN;
     }
 }
+
+void Tile::reveal() {
+    if (state == HIDDEN) {
+        state = REVEALED;
+    }
+}

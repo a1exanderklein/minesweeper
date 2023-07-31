@@ -98,7 +98,7 @@ void drawCounter(sf::RenderWindow& window, sf::Texture& digitsTx, int numMines, 
     if (count < 0) {
         digit1 = 10;
     }
-    
+
     sf::IntRect rect1(digit1 * 21, 0, 21, 32);
     sf::Sprite digitSprite1(digitsTx, rect1);
     digitSprite1.setPosition(x, y);
@@ -247,6 +247,12 @@ int main() {
                         int row = static_cast<int>(clickCoordinates.y) / 32;
                         int tileNumber = static_cast<int>(numRow * col + row);
                         board.setFlag(tileNumber);
+                    }
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        int col = static_cast<int>(clickCoordinates.x) / 32;
+                        int row = static_cast<int>(clickCoordinates.y) / 32;
+                        int tileNumber = static_cast<int>(numRow * col + row);
+                        board.setReveal(tileNumber);
                     }
                 }
             }
