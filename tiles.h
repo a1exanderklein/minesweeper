@@ -13,14 +13,34 @@ enum State {
 class Tile {
 public:
     Tile(sf::Vector2f position);
-    void drawState(sf::RenderWindow& window);
     State getState();
+    void drawState(sf::RenderWindow& window);
+    void setMine();
+    bool getMine();
     void flag();
     void reveal();
+    void addAdjacent(Tile* adjacent, int location);
+    void setTouching(int num);
     
+    Tile* adjacent[8];
+
+    sf::Texture hiddenTx;
+    sf::Texture revealedTx;
+    sf::Texture flagTx;
+    sf::Texture mineTx;
+    sf::Texture oneTx;
+    sf::Texture twoTx;
+    sf::Texture threeTx;
+    sf::Texture fourTx;
+    sf::Texture fiveTx;
+    sf::Texture sixTx;
+    sf::Texture sevenTx;
+    sf::Texture eightTx;
+
 private:
-    vector<Tile*> adjacent;
     State state;
     sf::Sprite spriteTile;
     sf::Vector2f position;
+    bool mine = false;
+    int minesTouching = 0;
 };

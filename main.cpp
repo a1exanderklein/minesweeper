@@ -82,7 +82,7 @@ private:
     bool running = false;
 };
 
-void drawCounter(sf::RenderWindow& window, sf::Texture& digitsTx, int numMines, int numFlags, float numCol, float numRow) {
+void drawCounter(sf::RenderWindow& window, sf::Texture& digitsTx, int numMines, int numFlags, int numCol, int numRow) {
     int count = numMines - numFlags;
     
     float x, y;
@@ -115,7 +115,7 @@ void drawCounter(sf::RenderWindow& window, sf::Texture& digitsTx, int numMines, 
     window.draw(digitSprite3);
 }
 
-void drawTimer(sf::RenderWindow& window, sf::Texture& digitsTx, float numCol, float numRow, string time) {
+void drawTimer(sf::RenderWindow& window, sf::Texture& digitsTx, int numCol, int numRow, string time) {
     int min1 = time[0] - '0';
     int min2 = time[1] - '0';
     float minX, minY;
@@ -148,19 +148,20 @@ void drawTimer(sf::RenderWindow& window, sf::Texture& digitsTx, float numCol, fl
 }
 
 int main() {
-    // Welcome welcome;
-    // welcome();
+    Welcome welcome;
+    welcome();
 
     // GAME WINDOW //
 
     //Read Board_config
-    float numCol;
-    float numRow;
+    int numCol;
+    int numRow;
     int numMines;
     ifstream infile("files/board_config.cfg");
     infile >> numCol;
     infile >> numRow;
     infile >> numMines;
+    // cout << numCol << " " << numRow << endl;
 
     float width = numCol * 32;
     float height = ( numRow * 32 ) + 100;
@@ -214,7 +215,7 @@ int main() {
     timer.start();
     bool paused = false;
 
-    Board board(game, numTiles, numCol, numRow);
+    Board board(game, numMines, numTiles, numCol, numRow);
     
     while (game.isOpen()) {
         sf::Event event;
@@ -253,6 +254,7 @@ int main() {
                         int row = static_cast<int>(clickCoordinates.y) / 32;
                         int tileNumber = static_cast<int>(numRow * col + row);
                         board.setReveal(tileNumber);
+                        // cout << "Tile: " << tileNumber << endl;
                     }
                 }
             }
