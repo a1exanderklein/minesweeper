@@ -37,6 +37,14 @@ public:
             running = true;
         }
     }
+
+    string stop() {
+        tempTime = chrono::high_resolution_clock::now();
+        totalTime += tempTime - startTime;
+        running = false;
+        string finalTime = getTime();
+        return finalTime;
+    }
     
     string getTime() {
         if (running) {
@@ -215,6 +223,7 @@ int main() {
     timer.start();
     bool paused = false;
     bool debugging = false;
+    string finalTime = "";
 
     Board board(game, numMines, numTiles, numCol, numRow);
     
@@ -246,11 +255,15 @@ int main() {
                             board.checkOver();
                             if (board.checkOver() == true) {
                                 happyFace.setTexture(loseFaceTx);
+                                finalTime = timer.stop();
+                                cout << finalTime;
                             }
                             board.checkWin();
                             if (board.checkWin() == true) {
                                 happyFace.setTexture(winFaceTx);
                                 debugging = false;
+                                finalTime = timer.stop();
+                                cout << finalTime;
                             } 
                             // cout << "Tile: " << tileNumber << endl;
                         }
