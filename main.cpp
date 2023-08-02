@@ -214,6 +214,7 @@ int main() {
     Timer timer;
     timer.start();
     bool paused = false;
+    bool debugging = false;
 
     Board board(game, numMines, numTiles, numCol, numRow);
     
@@ -228,7 +229,7 @@ int main() {
                 auto clickCoordinates = sf::Mouse::getPosition(game);
                 // cout << "X: " << clickCoordinates.x << endl;
                 // cout << "Y: " << clickCoordinates.y << endl << endl;
-                if (board.checkOver() == false) {
+                if (board.checkOver() == false && board.checkWin() == false && paused == false) {
                     //Flagging & Revealing
                     if (backgroundShape.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
                         if (event.mouseButton.button == sf::Mouse::Right) {
@@ -249,6 +250,7 @@ int main() {
                             board.checkWin();
                             if (board.checkWin() == true) {
                                 happyFace.setTexture(winFaceTx);
+                                debugging = false;
                             } 
                             // cout << "Tile: " << tileNumber << endl;
                         }
@@ -266,15 +268,18 @@ int main() {
                     }
                 }
                 //Debug Button
-                if (debug.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
-                    board.debug(game);
+                if (board.checkOver() == false && board.checkWin() == false) {
+                    if (debug.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                        debugging = !debugging;
+                        // board.debug(game);
+                    }
                 }
             }
         }
         game.clear();
         game.draw(backgroundShape);
         game.draw(buttonDeck);
-        board.drawBoard();
+        board.drawBoard(paused, debugging);
         game.draw(happyFace);
         game.draw(debug);
         game.draw(playButton);

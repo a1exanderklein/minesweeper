@@ -14,10 +14,10 @@ class Tile {
 public:
     Tile(sf::Vector2f position);
     State getState();
-    void drawState(sf::RenderWindow& window);
+    void drawState(sf::RenderWindow& window, bool paused, bool debugging);
     void setMine();
     bool getMine();
-    void debugMine(sf::RenderWindow& window);
+    // void debugMine(sf::RenderWindow& window);
     void flag();
     void reveal();
     void addAdjacent(Tile* adjacent, int location);

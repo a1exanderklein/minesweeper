@@ -7,12 +7,12 @@ using namespace std;
 class Board {
 public:    
     Board(sf::RenderWindow& window, int numMines, float numTiles, int numCol, int numRow);
-    void drawBoard();
+    void drawBoard(bool paused, bool debugging);
     int getNumFlags();
     void setFlag(int tileNumber);
     void setReveal(int tileNumber);
     void setAdjacent();
-    void debug(sf::RenderWindow& window);
+    // void debug(sf::RenderWindow& window);
     bool checkOver();
     bool checkWin();
     void recursion(int tileNumber);
