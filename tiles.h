@@ -17,12 +17,14 @@ public:
     void drawState(sf::RenderWindow& window);
     void setMine();
     bool getMine();
+    void debugMine(sf::RenderWindow& window);
     void flag();
     void reveal();
     void addAdjacent(Tile* adjacent, int location);
     void setTouching(int num);
     
     Tile* adjacent[8];
+    int minesTouching = 0;
 
     sf::Texture hiddenTx;
     sf::Texture revealedTx;
@@ -42,5 +44,4 @@ private:
     sf::Sprite spriteTile;
     sf::Vector2f position;
     bool mine = false;
-    int minesTouching = 0;
 };

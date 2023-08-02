@@ -54,7 +54,51 @@ void Board::setFlag(int tileNumber) {
 }
 
 void Board::setReveal(int tileNumber) {
+    if (tiles[tileNumber].minesTouching == 0) {
+        recursion(tileNumber);
+    }
     tiles[tileNumber].reveal();
+    if (tiles[tileNumber].getMine() == true) {
+        // gameOver = true;
+    }
+}
+
+void Board::recursion(int tileNumber) {
+    Tile* current = &tiles[tileNumber];
+    if (current->getState() == REVEALED) {
+        return;
+    }
+    current->reveal();
+    if (current->minesTouching == 0) {
+        for (int i = 0; i < 8; i++) {
+            if (current->adjacent[i] != nullptr) {
+                int adjacentIndex = current->adjacent[i] - &tiles[0];
+                recursion(adjacentIndex);
+            }
+        }
+    }
+}
+
+bool Board::checkOver() {
+    return gameOver;
+}
+
+bool Board::checkWin() {
+    int safeTiles = 0;
+    for (int i = 0; i < tiles.size(); i++) {
+        if (tiles[i].getState() == HIDDEN && tiles[i].getMine() == false) {
+            safeTiles++;
+        }
+        if (tiles[i].getState() == FLAGGED && tiles[i].getMine() == false) {
+            safeTiles++;
+        }
+    }
+    if (safeTiles > 0) {
+        return false;
+    } else {
+        return true;
+    }
+
 }
 
 void Board::setAdjacent() {
@@ -123,6 +167,14 @@ void Board::setAdjacent() {
             tiles[i].addAdjacent(&tiles[i + 1], 5);
             tiles[i].addAdjacent(&tiles[i - numRow + 1], 6);
             tiles[i].addAdjacent(&tiles[i - numRow], 7);
+        }
+    }
+}
+
+void Board::debug(sf::RenderWindow& window) {
+    for (int i = 0; i < tiles.size(); i++) {
+        if (tiles[i].getMine() == true) {
+            tiles[i].debugMine(window);
         }
     }
 }

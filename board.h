@@ -12,12 +12,17 @@ public:
     void setFlag(int tileNumber);
     void setReveal(int tileNumber);
     void setAdjacent();
+    void debug(sf::RenderWindow& window);
+    bool checkOver();
+    bool checkWin();
+    void recursion(int tileNumber);
 
 private:
     sf::RenderWindow& window;
     vector<Tile> tiles;
     int numCol;
     int numRow;
+    bool gameOver = false;
 };
 
 //Neighbors Display

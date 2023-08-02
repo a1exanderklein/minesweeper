@@ -148,8 +148,8 @@ void drawTimer(sf::RenderWindow& window, sf::Texture& digitsTx, int numCol, int 
 }
 
 int main() {
-    Welcome welcome;
-    welcome();
+    // Welcome welcome;
+    // welcome();
 
     // GAME WINDOW //
 
@@ -228,7 +228,32 @@ int main() {
                 auto clickCoordinates = sf::Mouse::getPosition(game);
                 // cout << "X: " << clickCoordinates.x << endl;
                 // cout << "Y: " << clickCoordinates.y << endl << endl;
-
+                if (board.checkOver() == false) {
+                    //Flagging & Revealing
+                    if (backgroundShape.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                        if (event.mouseButton.button == sf::Mouse::Right) {
+                            int col = static_cast<int>(clickCoordinates.x) / 32;
+                            int row = static_cast<int>(clickCoordinates.y) / 32;
+                            int tileNumber = static_cast<int>(numRow * col + row);
+                            board.setFlag(tileNumber);
+                        }
+                        if (event.mouseButton.button == sf::Mouse::Left) {
+                            int col = static_cast<int>(clickCoordinates.x) / 32;
+                            int row = static_cast<int>(clickCoordinates.y) / 32;
+                            int tileNumber = static_cast<int>(numRow * col + row);
+                            board.setReveal(tileNumber);
+                            board.checkOver();
+                            if (board.checkOver() == true) {
+                                happyFace.setTexture(loseFaceTx);
+                            }
+                            board.checkWin();
+                            if (board.checkWin() == true) {
+                                happyFace.setTexture(winFaceTx);
+                            } 
+                            // cout << "Tile: " << tileNumber << endl;
+                        }
+                    }
+                }
                 //Pausing Mechanics
                 if (playButton.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
                     paused = !paused;
@@ -240,22 +265,9 @@ int main() {
                         timer.resume();
                     }
                 }
-
-                //Flagging
-                if (backgroundShape.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
-                    if (event.mouseButton.button == sf::Mouse::Right) {
-                        int col = static_cast<int>(clickCoordinates.x) / 32;
-                        int row = static_cast<int>(clickCoordinates.y) / 32;
-                        int tileNumber = static_cast<int>(numRow * col + row);
-                        board.setFlag(tileNumber);
-                    }
-                    if (event.mouseButton.button == sf::Mouse::Left) {
-                        int col = static_cast<int>(clickCoordinates.x) / 32;
-                        int row = static_cast<int>(clickCoordinates.y) / 32;
-                        int tileNumber = static_cast<int>(numRow * col + row);
-                        board.setReveal(tileNumber);
-                        // cout << "Tile: " << tileNumber << endl;
-                    }
+                //Debug Button
+                if (debug.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                    board.debug(game);
                 }
             }
         }

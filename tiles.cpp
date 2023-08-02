@@ -98,7 +98,11 @@ bool Tile::getMine() {
     }
 }
 
-
+void Tile::debugMine(sf::RenderWindow& window) {
+    sf::Sprite mineSprite(mineTx);
+    mineSprite.setPosition(position);
+    window.draw(mineSprite);
+}
 
 void Tile::flag() {
     if (state == HIDDEN) {
