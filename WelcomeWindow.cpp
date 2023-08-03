@@ -3,12 +3,12 @@
 #include <iostream>
 #include <cctype>
 
-void Welcome::operator()(){
+void Welcome::operator()(float width, float height){
     // WELCOME WINDOW //
-    sf::RenderWindow welcome(sf::VideoMode(800, 600), "Welcome Window", sf::Style::Close);
+    sf::RenderWindow welcome(sf::VideoMode(width, height), "Welcome Window", sf::Style::Close);
 
     //Background
-    sf::RectangleShape backgroundShape(sf::Vector2f(800, 600));
+    sf::RectangleShape backgroundShape(sf::Vector2f(width, height));
     backgroundShape.setFillColor(sf::Color::Blue);
 
     //Font
@@ -19,27 +19,27 @@ void Welcome::operator()(){
     
     //Welcome Message
     sf::Text messageWelcome("WELCOME TO MINESWEEPER!", font, 24);
-    setText(messageWelcome, (800/2.0f), (600/2.0f) - 150);
+    setText(messageWelcome, (width/2.0f), (height/2.0f) - 150);
     messageWelcome.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
     //Input Message
     sf::Text messageInput("Enter your name:", font, 20);
-    setText(messageInput, (800/2.0f), (600/2.0f) - 75);
+    setText(messageInput, (width/2.0f), (height/2.0f) - 75);
     messageInput.setStyle(sf::Text::Bold);
 
     //Name Input Text
     sf::Text nameInput("", font, 18);
     nameInput.setFillColor(sf::Color::Yellow);
-    setText(nameInput, (800/2.0f), (600/2.0f) - 45);
+    setText(nameInput, (width/2.0f), (height/2.0f) - 45);
     nameInput.setStyle(sf::Text::Bold);
 
     //Cursor
     sf::Text cursor("|", font, 18);
     cursor.setFillColor(sf::Color::Yellow);
-    setText(cursor, (800/2.0f), (600/2.0f) - 45);
+    setText(cursor, (width/2.0f), (height/2.0f) - 45);
     cursor.setStyle(sf::Text::Bold);
 
-    string namePlayer = "";
+    namePlayer = "";
     
     while (welcome.isOpen()) {
         sf::Event event;
@@ -59,7 +59,7 @@ void Welcome::operator()(){
                 }
                 setCasing(namePlayer);
                 nameInput.setString(namePlayer);
-                setText(nameInput, (800/2.0f), (600/2.0f) - 45);
+                setText(nameInput, (width/2.0f), (height/2.0f) - 45);
                 sf::FloatRect nameInputRect = nameInput.getLocalBounds();
                 float cursorX = nameInput.getPosition().x + nameInputRect.width * 0.5f + 3.0f; //space beween cursor and name
                 float cursorY = nameInput.getPosition().y;

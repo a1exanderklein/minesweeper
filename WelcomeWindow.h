@@ -7,8 +7,9 @@ using namespace std;
 
 class Welcome {
 public:
-    void operator()();
+    void operator()(float width, float height);
     bool exitProgram = false;
+    string namePlayer;
 
 private:
     void setText(sf::Text& text, float x, float y);

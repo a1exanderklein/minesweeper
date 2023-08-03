@@ -6,6 +6,7 @@
 #include <chrono>
 #include <vector>
 #include "WelcomeWindow.h"
+#include "Leaderboard.h"
 #include "tiles.h"
 #include "board.h"
 
@@ -156,11 +157,6 @@ void drawTimer(sf::RenderWindow& window, sf::Texture& digitsTx, int numCol, int 
 }
 
 int main() {
-    // Welcome welcome;
-    // welcome();
-
-    // GAME WINDOW //
-
     //Read Board_config
     int numCol;
     int numRow;
@@ -169,12 +165,14 @@ int main() {
     infile >> numCol;
     infile >> numRow;
     infile >> numMines;
-    // cout << numCol << " " << numRow << endl;
-
     float width = numCol * 32;
     float height = ( numRow * 32 ) + 100;
-    float numTiles = numCol * numRow;
-    
+    float numTiles = numCol * numRow;    
+
+    // Welcome welcome;
+    // welcome(width, height);
+
+    // GAME WINDOW //
     sf::RenderWindow game(sf::VideoMode(width, height), "Minesweeper", sf::Style::Close);
     
     //Background
@@ -211,9 +209,9 @@ int main() {
 
     sf::Texture leaderboardTx;
     leaderboardTx.loadFromFile("files/images/leaderboard.png");
-    sf::Sprite leaderboard;
-    leaderboard.setTexture(leaderboardTx);
-    leaderboard.setPosition( (numCol * 32) - 176, 32 * (numRow + 0.5f) );
+    sf::Sprite leaderboardSprite;
+    leaderboardSprite.setTexture(leaderboardTx);
+    leaderboardSprite.setPosition( (numCol * 32) - 176, 32 * (numRow + 0.5f) );
 
     //Digits
     sf::Texture digitsTx;
@@ -226,6 +224,7 @@ int main() {
     string finalTime = "";
 
     Board board(game, numMines, numTiles, numCol, numRow);
+    Leaderboard leaderboard(width/2.0f, height/2.0f);
     
     while (game.isOpen()) {
         sf::Event event;
@@ -269,23 +268,29 @@ int main() {
                         }
                     }
                 }
-                //Pausing Mechanics
-                if (playButton.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
-                    paused = !paused;
-                    playButton.setTexture(paused ? playTx : pauseTx);
-                    if (paused) {
-                        timer.pause();
-                    }
-                    else {
-                        timer.resume();
-                    }
-                }
-                //Debug Button
                 if (board.checkOver() == false && board.checkWin() == false) {
+                    //Pausing Mechanics
+                    if (playButton.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                        paused = !paused;
+                        playButton.setTexture(paused ? playTx : pauseTx);
+                        if (paused) {
+                            timer.pause();
+                        }
+                        else {
+                            timer.resume();
+                        }
+                    }
+                    //Debug Button
                     if (debug.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
                         debugging = !debugging;
                         // board.debug(game);
                     }
+                }
+                if (happyFace.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+
+                }
+                if (leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                    leaderboard();
                 }
             }
         }
@@ -296,7 +301,7 @@ int main() {
         game.draw(happyFace);
         game.draw(debug);
         game.draw(playButton);
-        game.draw(leaderboard);
+        game.draw(leaderboardSprite);
         drawCounter(game, digitsTx, numMines, numFlags, numCol, numRow);
         drawTimer(game, digitsTx, numCol, numRow, timer.getTime());
         game.display();
