@@ -279,15 +279,6 @@ int main() {
                             // cout << "Tile: " << tileNumber << endl;
                         }
                     }
-                    if (leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
-                        paused = !paused;
-                        if (paused == true) {
-                            timer.pause();
-                            leaderboard();
-                            timer.resume();                            
-                            paused = !paused;
-                        }
-                    }
                 }
                 if (board.checkOver() == false && board.checkWin() == false) {
                     //Pausing Mechanics
@@ -315,6 +306,13 @@ int main() {
                     happyFace.setTexture(happyFaceTx);
                     gameLost = false;
                     debugging = false;
+                }
+                if (board.checkOver() == false && leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                    paused = true;
+                    timer.pause();
+                    leaderboard();
+                    timer.resume();                            
+                    paused = false;
                 }
                 if (board.checkOver() == true && leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
                     leaderboard();

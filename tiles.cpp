@@ -71,7 +71,7 @@ void Tile::drawNums(sf::RenderWindow& window) {
 }
 
 void Tile::drawState(sf::RenderWindow& window, bool paused, bool debugging, bool gameLost) {
-    if (paused == false && debugging == false) {
+    if (paused == false && debugging == false) { //default
         if (state == HIDDEN) {
             spriteTile.setTexture(hiddenTx);
         }
