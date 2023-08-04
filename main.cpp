@@ -171,7 +171,7 @@ int main() {
 
     // Welcome welcome;
     // welcome(width, height);
-    // string namePlayer = welcome.getName() + "*";
+    // string namePlayer = welcome.getName();
     string namePlayer = "A";
 
     // GAME WINDOW //
@@ -267,7 +267,7 @@ int main() {
                                 debugging = false;
                                 finalTime = timer.stop();
                                 finalTime.insert(2, ":");
-                                cout << finalTime;
+                                // cout << finalTime;
                                 leaderboard.addWinner(namePlayer, finalTime);
                             } 
                             // cout << "Tile: " << tileNumber << endl;

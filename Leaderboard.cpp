@@ -88,8 +88,9 @@ void Leaderboard::setText(sf::Text& text, float x, float y, bool center) {
 }
 
 void Leaderboard::addWinner(string name, string time) {
-    leaders.emplace(time, name);
     string winner = time + "," + name;
     ofstream outfile("files/leaderboard.txt", ios::app);
     outfile << endl << winner;    
+    name += "*";
+    leaders.emplace(time, name);
 }
