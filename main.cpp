@@ -39,6 +39,12 @@ public:
         }
     }
 
+    void reset() {
+        startTime = chrono::high_resolution_clock::now();
+        totalTime = std::chrono::high_resolution_clock::duration::zero();
+        running = false;
+    }
+
     string stop() {
         tempTime = chrono::high_resolution_clock::now();
         totalTime += tempTime - startTime;
@@ -160,11 +166,11 @@ int main() {
     //Read Board_config
     int numCol;
     int numRow;
-    int numMines;
+    int numMines = 3;
     ifstream infile("files/board_config.cfg");
     infile >> numCol;
     infile >> numRow;
-    infile >> numMines;
+    // infile >> numMines;
     float width = numCol * 32;
     float height = ( numRow * 32 ) + 100;
     float numTiles = numCol * numRow; 
@@ -259,7 +265,7 @@ int main() {
                                 gameLost = true;
                                 happyFace.setTexture(loseFaceTx);
                                 finalTime = timer.stop();
-                                cout << finalTime;
+                                // cout << finalTime;
                             }
                             board.checkWin();
                             if (board.checkWin() == true) {
@@ -302,12 +308,16 @@ int main() {
                     }
                 }
                 if (happyFace.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
-
+                    board.reset();
+                    finalTime = "";
+                    timer.reset();
+                    timer.start();
+                    happyFace.setTexture(happyFaceTx);
+                    gameLost = false;
+                    debugging = false;
                 }
                 if (board.checkOver() == true && leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
-                    timer.pause();
                     leaderboard();
-                    timer.resume();
                 }
             }
         }

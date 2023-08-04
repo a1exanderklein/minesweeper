@@ -3,6 +3,8 @@
 Board::Board(sf::RenderWindow& window, int numMines, float numTiles, int numCol, int numRow) : window(window){
     this -> numCol = numCol;
     this -> numRow = numRow;
+    this -> numMines = numMines;
+    this -> numTiles = numTiles;
 
     float size = 32.0f;
     for (int i = 0; i < numCol; i++) {
@@ -31,6 +33,37 @@ Board::Board(sf::RenderWindow& window, int numMines, float numTiles, int numCol,
         }
         tiles[i].setTouching(number);
     }
+}
+void Board::reset() {
+    tiles.clear();
+    float size = 32.0f;
+    for (int i = 0; i < numCol; i++) {
+        for (int j = 0; j < numRow; j++) {
+            Tile tile(sf::Vector2f(i * size, j * size));
+            tiles.push_back(tile);
+        }
+    }
+    int numPlaced = 0;
+    while (numPlaced < numMines) {
+        int random = rand() % static_cast<int>(numTiles);
+        if (tiles[random].getMine() == false) {
+            tiles[random].setMine();
+            numPlaced++;
+        }
+    }
+    setAdjacent();
+    for (int i = 0; i < tiles.size(); i++) {
+        int number = 0;
+        for (int j = 0; j < 8; j++) {
+            if (tiles[i].adjacent[j] != nullptr) {
+                if (tiles[i].adjacent[j]->getMine() == true) {
+                    number++;
+                }
+            }
+        }
+        tiles[i].setTouching(number);
+    }
+    gameOver = false;
 }
 
 void Board::drawBoard(bool paused, bool debugging, bool gameLost) {
