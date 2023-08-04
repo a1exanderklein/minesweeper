@@ -14,7 +14,8 @@ class Tile {
 public:
     Tile(sf::Vector2f position);
     State getState();
-    void drawState(sf::RenderWindow& window, bool paused, bool debugging);
+    void setState(State newState);
+    void drawState(sf::RenderWindow& window, bool paused, bool debugging, bool gameLost);
     void setMine();
     bool getMine();
     // void debugMine(sf::RenderWindow& window);
@@ -22,6 +23,7 @@ public:
     void reveal();
     void addAdjacent(Tile* adjacent, int location);
     void setTouching(int num);
+    void drawNums(sf::RenderWindow& window);
     
     Tile* adjacent[8];
     int minesTouching = 0;

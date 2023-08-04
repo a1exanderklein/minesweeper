@@ -23,7 +23,54 @@ State Tile::getState() {
     return state;
 }
 
-void Tile::drawState(sf::RenderWindow& window, bool paused, bool debugging) {
+void Tile::setState(State newState) {
+    state = newState;
+}
+
+void Tile::drawNums(sf::RenderWindow& window) {
+    if (state == REVEALED && minesTouching == 1 && mine == false) {
+        sf::Sprite oneSprite(oneTx);
+        oneSprite.setPosition(position);
+        window.draw(oneSprite);
+    }
+    if (state == REVEALED && minesTouching == 2 && mine == false) {
+        sf::Sprite twoSprite(twoTx);
+        twoSprite.setPosition(position);
+        window.draw(twoSprite);
+    }
+    if (state == REVEALED && minesTouching == 3 && mine == false) {
+        sf::Sprite threeSprite(threeTx);
+        threeSprite.setPosition(position);
+        window.draw(threeSprite);
+    }
+    if (state == REVEALED && minesTouching == 4 && mine == false) {
+        sf::Sprite fourSprite(fourTx);
+        fourSprite.setPosition(position);
+        window.draw(fourSprite);
+    }
+    if (state == REVEALED && minesTouching == 5 && mine == false) {
+        sf::Sprite fiveSprite(fiveTx);
+        fiveSprite.setPosition(position);
+        window.draw(fiveSprite);
+    }
+    if (state == REVEALED && minesTouching == 6 && mine == false) {
+        sf::Sprite sixSprite(sixTx);
+        sixSprite.setPosition(position);
+        window.draw(sixSprite);
+    }
+    if (state == REVEALED && minesTouching == 7 && mine == false) {
+        sf::Sprite sevenSprite(sevenTx);
+        sevenSprite.setPosition(position);
+        window.draw(sevenSprite);
+    }
+    if (state == REVEALED && minesTouching == 8 && mine == false) {
+        sf::Sprite eightSprite(eightTx);
+        eightSprite.setPosition(position);
+        window.draw(eightSprite);
+    }
+}
+
+void Tile::drawState(sf::RenderWindow& window, bool paused, bool debugging, bool gameLost) {
     if (paused == false && debugging == false) {
         if (state == HIDDEN) {
             spriteTile.setTexture(hiddenTx);
@@ -44,53 +91,14 @@ void Tile::drawState(sf::RenderWindow& window, bool paused, bool debugging) {
             mineSprite.setPosition(position);
             window.draw(mineSprite);
         }
-        if (state == REVEALED && minesTouching == 1 && mine == false) {
-            sf::Sprite oneSprite(oneTx);
-            oneSprite.setPosition(position);
-            window.draw(oneSprite);
-        }
-        if (state == REVEALED && minesTouching == 2 && mine == false) {
-            sf::Sprite twoSprite(twoTx);
-            twoSprite.setPosition(position);
-            window.draw(twoSprite);
-        }
-        if (state == REVEALED && minesTouching == 3 && mine == false) {
-            sf::Sprite threeSprite(threeTx);
-            threeSprite.setPosition(position);
-            window.draw(threeSprite);
-        }
-        if (state == REVEALED && minesTouching == 4 && mine == false) {
-            sf::Sprite fourSprite(fourTx);
-            fourSprite.setPosition(position);
-            window.draw(fourSprite);
-        }
-        if (state == REVEALED && minesTouching == 5 && mine == false) {
-            sf::Sprite fiveSprite(fiveTx);
-            fiveSprite.setPosition(position);
-            window.draw(fiveSprite);
-        }
-        if (state == REVEALED && minesTouching == 6 && mine == false) {
-            sf::Sprite sixSprite(sixTx);
-            sixSprite.setPosition(position);
-            window.draw(sixSprite);
-        }
-        if (state == REVEALED && minesTouching == 7 && mine == false) {
-            sf::Sprite sevenSprite(sevenTx);
-            sevenSprite.setPosition(position);
-            window.draw(sevenSprite);
-        }
-        if (state == REVEALED && minesTouching == 8 && mine == false) {
-            sf::Sprite eightSprite(eightTx);
-            eightSprite.setPosition(position);
-            window.draw(eightSprite);
-        }
+        drawNums(window);
     }
-    if (paused == true) {
+    if (paused == true) { //paused mode
         spriteTile.setTexture(revealedTx);
         spriteTile.setPosition(position);
         window.draw(spriteTile);
     }
-    if (debugging == true && paused == false) {
+    if (debugging == true && paused == false) { //debugging mode
         if (state == HIDDEN) {
             spriteTile.setTexture(hiddenTx);
         }
@@ -115,46 +123,41 @@ void Tile::drawState(sf::RenderWindow& window, bool paused, bool debugging) {
             mineSprite.setPosition(position);
             window.draw(mineSprite);
         }
-        if (state == REVEALED && minesTouching == 1 && mine == false) {
-            sf::Sprite oneSprite(oneTx);
-            oneSprite.setPosition(position);
-            window.draw(oneSprite);
+        drawNums(window);
+    }
+    if (gameLost == true) {
+        if (state == HIDDEN) {
+            spriteTile.setTexture(hiddenTx);
         }
-        if (state == REVEALED && minesTouching == 2 && mine == false) {
-            sf::Sprite twoSprite(twoTx);
-            twoSprite.setPosition(position);
-            window.draw(twoSprite);
+        if (state == REVEALED) {
+            spriteTile.setTexture(revealedTx);
         }
-        if (state == REVEALED && minesTouching == 3 && mine == false) {
-            sf::Sprite threeSprite(threeTx);
-            threeSprite.setPosition(position);
-            window.draw(threeSprite);
+        spriteTile.setPosition(position);
+        window.draw(spriteTile);
+
+        if (state == FLAGGED) {
+            sf::Sprite flagSprite(flagTx);
+            flagSprite.setPosition(position);
+            window.draw(flagSprite);
         }
-        if (state == REVEALED && minesTouching == 4 && mine == false) {
-            sf::Sprite fourSprite(fourTx);
-            fourSprite.setPosition(position);
-            window.draw(fourSprite);
+        if (state == REVEALED && mine == true) {
+            sf::Sprite mineSprite(mineTx);
+            mineSprite.setPosition(position);
+            window.draw(mineSprite);
         }
-        if (state == REVEALED && minesTouching == 5 && mine == false) {
-            sf::Sprite fiveSprite(fiveTx);
-            fiveSprite.setPosition(position);
-            window.draw(fiveSprite);
+        if (state == HIDDEN && mine == true) {
+            setState(REVEALED);
+            sf::Sprite mineSprite(mineTx);
+            mineSprite.setPosition(position);
+            window.draw(mineSprite);
         }
-        if (state == REVEALED && minesTouching == 6 && mine == false) {
-            sf::Sprite sixSprite(sixTx);
-            sixSprite.setPosition(position);
-            window.draw(sixSprite);
+        if (state == FLAGGED && mine == true) {
+            sf::Sprite mineSprite(mineTx);
+            mineSprite.setPosition(position);
+            window.draw(mineSprite);
         }
-        if (state == REVEALED && minesTouching == 7 && mine == false) {
-            sf::Sprite sevenSprite(sevenTx);
-            sevenSprite.setPosition(position);
-            window.draw(sevenSprite);
-        }
-        if (state == REVEALED && minesTouching == 8 && mine == false) {
-            sf::Sprite eightSprite(eightTx);
-            eightSprite.setPosition(position);
-            window.draw(eightSprite);
-        }
+        drawNums(window);
+        
     }
 }
 

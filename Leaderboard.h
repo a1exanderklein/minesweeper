@@ -13,6 +13,7 @@ public:
     bool exitProgram = false;
     map<string, string> leaders;
     void drawLeaders(sf::RenderWindow& window);
+    void addWinner(string name, string time);
 
     float width;
     float height;

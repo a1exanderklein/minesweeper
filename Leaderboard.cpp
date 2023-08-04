@@ -21,7 +21,7 @@ Leaderboard::Leaderboard(float width, float height) {
         stringstream stream(line);
         getline(stream, time, ',');
         getline(stream, name);
-        leaders.emplace(name, time);
+        leaders.emplace(time, name);
     }
 }
 
@@ -69,8 +69,8 @@ void Leaderboard::drawLeaders(sf::RenderWindow& window) {
     int rank = 1;
     map<string, string>::iterator iter;
     for (iter = leaders.begin(); iter != leaders.end() && rank < 6; iter++) {
-        string name = iter->first;
-        string time = iter->second;
+        string time = iter->first;
+        string name = iter->second;
         string leaderRow = to_string(rank) + ".\t" + time + "\t" + name;
         leaderText.setString(leaderRow);
         setText(leaderText, width/5.0f, height/5.0f + 20 + (40 * (rank - 1)), false);
@@ -85,4 +85,11 @@ void Leaderboard::setText(sf::Text& text, float x, float y, bool center) {
         text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
     }
     text.setPosition(sf::Vector2f(x, y));
+}
+
+void Leaderboard::addWinner(string name, string time) {
+    leaders.emplace(time, name);
+    string winner = time + "," + name;
+    ofstream outfile("files/leaderboard.txt", ios::app);
+    outfile << endl << winner;    
 }

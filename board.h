@@ -7,7 +7,7 @@ using namespace std;
 class Board {
 public:    
     Board(sf::RenderWindow& window, int numMines, float numTiles, int numCol, int numRow);
-    void drawBoard(bool paused, bool debugging);
+    void drawBoard(bool paused, bool debugging, bool gameLost);
     int getNumFlags();
     void setFlag(int tileNumber);
     void setReveal(int tileNumber);

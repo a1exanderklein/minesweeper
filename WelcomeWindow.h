@@ -9,6 +9,7 @@ class Welcome {
 public:
     void operator()(float width, float height);
     bool exitProgram = false;
+    string getName();
     string namePlayer;
 
 private:

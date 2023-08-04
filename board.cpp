@@ -33,9 +33,9 @@ Board::Board(sf::RenderWindow& window, int numMines, float numTiles, int numCol,
     }
 }
 
-void Board::drawBoard(bool paused, bool debugging) {
+void Board::drawBoard(bool paused, bool debugging, bool gameLost) {
     for (int i = 0; i < tiles.size(); i++) {
-        tiles[i].drawState(window, paused, debugging);
+        tiles[i].drawState(window, paused, debugging, gameLost);
     }
 }
 

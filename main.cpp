@@ -167,10 +167,12 @@ int main() {
     infile >> numMines;
     float width = numCol * 32;
     float height = ( numRow * 32 ) + 100;
-    float numTiles = numCol * numRow;    
+    float numTiles = numCol * numRow; 
 
     // Welcome welcome;
     // welcome(width, height);
+    // string namePlayer = welcome.getName() + "*";
+    string namePlayer = "A";
 
     // GAME WINDOW //
     sf::RenderWindow game(sf::VideoMode(width, height), "Minesweeper", sf::Style::Close);
@@ -221,6 +223,7 @@ int main() {
     timer.start();
     bool paused = false;
     bool debugging = false;
+    bool gameLost = false;
     string finalTime = "";
 
     Board board(game, numMines, numTiles, numCol, numRow);
@@ -253,6 +256,7 @@ int main() {
                             board.setReveal(tileNumber);
                             board.checkOver();
                             if (board.checkOver() == true) {
+                                gameLost = true;
                                 happyFace.setTexture(loseFaceTx);
                                 finalTime = timer.stop();
                                 cout << finalTime;
@@ -262,9 +266,20 @@ int main() {
                                 happyFace.setTexture(winFaceTx);
                                 debugging = false;
                                 finalTime = timer.stop();
+                                finalTime.insert(2, ":");
                                 cout << finalTime;
+                                leaderboard.addWinner(namePlayer, finalTime);
                             } 
                             // cout << "Tile: " << tileNumber << endl;
+                        }
+                    }
+                    if (leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                        paused = !paused;
+                        if (paused == true) {
+                            timer.pause();
+                            leaderboard();
+                            timer.resume();                            
+                            paused = !paused;
                         }
                     }
                 }
@@ -289,15 +304,17 @@ int main() {
                 if (happyFace.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
 
                 }
-                if (leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                if (board.checkOver() == true && leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
+                    timer.pause();
                     leaderboard();
+                    timer.resume();
                 }
             }
         }
         game.clear();
         game.draw(backgroundShape);
         game.draw(buttonDeck);
-        board.drawBoard(paused, debugging);
+        board.drawBoard(paused, debugging, gameLost);
         game.draw(happyFace);
         game.draw(debug);
         game.draw(playButton);
