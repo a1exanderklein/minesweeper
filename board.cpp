@@ -89,7 +89,9 @@ void Board::setFlag(int tileNumber) {
 void Board::setWinFlag() {
     for (int i = 0; i < tiles.size(); i++) {
         if (tiles[i].getMine() == true) {
-            tiles[i].flag();
+            if (tiles[i].getState() == HIDDEN) {
+                tiles[i].flag();
+            }
         }
     }    
 }
