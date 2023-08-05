@@ -1,22 +1,34 @@
 #include "tiles.h"
 
-Tile::Tile(sf::Vector2f position) : position(position) {
+Tile::Tile(sf::Vector2f position, TextureManager& txm) : position(position),
+    hiddenTx(txm.getTx("hiddenTx")),
+    revealedTx(txm.getTx("revealedTx")),
+    flagTx(txm.getTx("flagTx")),
+    mineTx(txm.getTx("mineTx")),
+    oneTx(txm.getTx("oneTx")),
+    twoTx(txm.getTx("twoTx")),
+    threeTx(txm.getTx("threeTx")),
+    fourTx(txm.getTx("fourTx")),
+    fiveTx(txm.getTx("fiveTx")),
+    sixTx(txm.getTx("sixTx")),
+    sevenTx(txm.getTx("sevenTx")),
+    eightTx(txm.getTx("eightTx")) {
     state = HIDDEN;
     for (int i = 0; i < 8; i++) {
         adjacent[i] = nullptr;
     }
-    hiddenTx.loadFromFile("files/images/tile_hidden.png");
-    revealedTx.loadFromFile("files/images/tile_revealed.png");
-    flagTx.loadFromFile("files/images/flag.png");
-    mineTx.loadFromFile("files/images/mine.png");    
-    oneTx.loadFromFile("files/images/number_1.png");
-    twoTx.loadFromFile("files/images/number_2.png");
-    threeTx.loadFromFile("files/images/number_3.png");
-    fourTx.loadFromFile("files/images/number_4.png");
-    fiveTx.loadFromFile("files/images/number_5.png");
-    sixTx.loadFromFile("files/images/number_6.png");
-    sevenTx.loadFromFile("files/images/number_7.png");
-    eightTx.loadFromFile("files/images/number_8.png");
+    // hiddenTx.loadFromFile("files/images/tile_hidden.png");
+    // revealedTx.loadFromFile("files/images/tile_revealed.png");
+    // flagTx.loadFromFile("files/images/flag.png");
+    // mineTx.loadFromFile("files/images/mine.png");    
+    // oneTx.loadFromFile("files/images/number_1.png");
+    // twoTx.loadFromFile("files/images/number_2.png");
+    // threeTx.loadFromFile("files/images/number_3.png");
+    // fourTx.loadFromFile("files/images/number_4.png");
+    // fiveTx.loadFromFile("files/images/number_5.png");
+    // sixTx.loadFromFile("files/images/number_6.png");
+    // sevenTx.loadFromFile("files/images/number_7.png");
+    // eightTx.loadFromFile("files/images/number_8.png");
 };
 
 State Tile::getState() {
@@ -173,12 +185,6 @@ bool Tile::getMine() {
         return false;
     }
 }
-
-// void Tile::debugMine(sf::RenderWindow& window) {
-//     sf::Sprite mineSprite(mineTx);
-//     mineSprite.setPosition(position);
-//     window.draw(mineSprite);
-// }
 
 void Tile::flag() {
     if (state == HIDDEN) {

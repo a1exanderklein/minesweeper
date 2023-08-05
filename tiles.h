@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "TextureManager.h"
 
 using namespace std;
 
@@ -12,13 +13,12 @@ enum State {
 
 class Tile {
 public:
-    Tile(sf::Vector2f position);
+    Tile(sf::Vector2f position, TextureManager& txm);
     State getState();
     void setState(State newState);
     void drawState(sf::RenderWindow& window, bool paused, bool debugging, bool gameLost);
     void setMine();
     bool getMine();
-    // void debugMine(sf::RenderWindow& window);
     void flag();
     void reveal();
     void addAdjacent(Tile* adjacent, int location);

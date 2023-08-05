@@ -7,6 +7,7 @@
 #include <vector>
 #include "WelcomeWindow.h"
 #include "Leaderboard.h"
+#include "TextureManager.h"
 #include "tiles.h"
 #include "board.h"
 
@@ -163,22 +164,23 @@ void drawTimer(sf::RenderWindow& window, sf::Texture& digitsTx, int numCol, int 
 }
 
 int main() {
+    TextureManager txm;
     //Read Board_config
     int numCol;
     int numRow;
-    int numMines = 3;
+    int numMines;
     ifstream infile("files/board_config.cfg");
     infile >> numCol;
     infile >> numRow;
-    // infile >> numMines;
+    infile >> numMines;
     float width = numCol * 32;
     float height = ( numRow * 32 ) + 100;
     float numTiles = numCol * numRow; 
 
-    // Welcome welcome;
-    // welcome(width, height);
-    // string namePlayer = welcome.getName();
-    string namePlayer = "A";
+    Welcome welcome;
+    welcome(width, height);
+    string namePlayer = welcome.getName();
+    // string namePlayer = "A";
 
     // GAME WINDOW //
     sf::RenderWindow game(sf::VideoMode(width, height), "Minesweeper", sf::Style::Close);
@@ -191,39 +193,39 @@ int main() {
     buttonDeck.setFillColor(sf::Color::White);
 
     //Buttons
-    sf::Texture happyFaceTx;
-    happyFaceTx.loadFromFile("files/images/face_happy.png");
-    sf::Texture winFaceTx;
-    winFaceTx.loadFromFile("files/images/face_win.png");
-    sf::Texture loseFaceTx;
-    loseFaceTx.loadFromFile("files/images/face_lose.png");
+    // sf::Texture happyFaceTx;
+    // happyFaceTx.loadFromFile("files/images/face_happy.png");
+    // sf::Texture winFaceTx;
+    // winFaceTx.loadFromFile("files/images/face_win.png");
+    // sf::Texture loseFaceTx;
+    // loseFaceTx.loadFromFile("files/images/face_lose.png");
     sf::Sprite happyFace;
-    happyFace.setTexture(happyFaceTx);
+    happyFace.setTexture(txm.getTx("happyFaceTx"));
     happyFace.setPosition( ((numCol / 2.0) * 32) - 32, 32 *(numRow + 0.5f) );
 
-    sf::Texture debugTx;
-    debugTx.loadFromFile("files/images/debug.png");
+    // sf::Texture debugTx;
+    // debugTx.loadFromFile("files/images/debug.png");
     sf::Sprite debug;
-    debug.setTexture(debugTx);
+    debug.setTexture(txm.getTx("debugTx"));
     debug.setPosition( (numCol * 32) - 304, 32 * (numRow + 0.5f) );
 
-    sf::Texture pauseTx;
-    pauseTx.loadFromFile("files/images/pause.png");
-    sf::Texture playTx;
-    playTx.loadFromFile("files/images/play.png");
+    // sf::Texture pauseTx;
+    // pauseTx.loadFromFile("files/images/pause.png");
+    // sf::Texture playTx;
+    // playTx.loadFromFile("files/images/play.png");
     sf::Sprite playButton;
-    playButton.setTexture(pauseTx);
+    playButton.setTexture(txm.getTx("pauseTx"));
     playButton.setPosition( (numCol * 32) - 240, 32 * (numRow + 0.5f) );
 
-    sf::Texture leaderboardTx;
-    leaderboardTx.loadFromFile("files/images/leaderboard.png");
+    // sf::Texture leaderboardTx;
+    // leaderboardTx.loadFromFile("files/images/leaderboard.png");
     sf::Sprite leaderboardSprite;
-    leaderboardSprite.setTexture(leaderboardTx);
+    leaderboardSprite.setTexture(txm.getTx("leaderboardTx"));
     leaderboardSprite.setPosition( (numCol * 32) - 176, 32 * (numRow + 0.5f) );
 
     //Digits
-    sf::Texture digitsTx;
-    digitsTx.loadFromFile("files/images/digits.png");
+    // sf::Texture digitsTx;
+    // digitsTx.loadFromFile("files/images/digits.png");
 
     Timer timer;
     timer.start();
@@ -232,7 +234,7 @@ int main() {
     bool gameLost = false;
     string finalTime = "";
 
-    Board board(game, numMines, numTiles, numCol, numRow);
+    Board board(game, txm, numMines, numTiles, numCol, numRow);
     Leaderboard leaderboard(width/2.0f, height/2.0f);
     
     while (game.isOpen()) {
@@ -244,8 +246,6 @@ int main() {
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 auto clickCoordinates = sf::Mouse::getPosition(game);
-                // cout << "X: " << clickCoordinates.x << endl;
-                // cout << "Y: " << clickCoordinates.y << endl << endl;
                 if (board.checkOver() == false && board.checkWin() == false && paused == false) {
                     //Flagging & Revealing
                     if (backgroundShape.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
@@ -263,20 +263,18 @@ int main() {
                             board.checkOver();
                             if (board.checkOver() == true) {
                                 gameLost = true;
-                                happyFace.setTexture(loseFaceTx);
+                                happyFace.setTexture(txm.getTx("loseFaceTx"));
                                 finalTime = timer.stop();
-                                // cout << finalTime;
                             }
                             board.checkWin();
                             if (board.checkWin() == true) {
-                                happyFace.setTexture(winFaceTx);
+                                board.setWinFlag();
+                                happyFace.setTexture(txm.getTx("winFaceTx"));
                                 debugging = false;
                                 finalTime = timer.stop();
                                 finalTime.insert(2, ":");
-                                // cout << finalTime;
                                 leaderboard.addWinner(namePlayer, finalTime);
                             } 
-                            // cout << "Tile: " << tileNumber << endl;
                         }
                     }
                 }
@@ -284,7 +282,7 @@ int main() {
                     //Pausing Mechanics
                     if (playButton.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
                         paused = !paused;
-                        playButton.setTexture(paused ? playTx : pauseTx);
+                        playButton.setTexture(paused ? txm.getTx("playTx") : txm.getTx("pauseTx"));
                         if (paused) {
                             timer.pause();
                         }
@@ -295,24 +293,23 @@ int main() {
                     //Debug Button
                     if (debug.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
                         debugging = !debugging;
-                        // board.debug(game);
                     }
                 }
                 if (happyFace.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
-                    board.reset();
+                    board.reset(txm);
                     finalTime = "";
                     timer.reset();
                     timer.start();
-                    happyFace.setTexture(happyFaceTx);
+                    happyFace.setTexture(txm.getTx("happyFaceTx"));
                     gameLost = false;
                     debugging = false;
                 }
                 if (board.checkOver() == false && leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
-                    paused = true;
                     timer.pause();
+                    board.drawBoard(true, false, false );
+                    game.display();
                     leaderboard();
                     timer.resume();                            
-                    paused = false;
                 }
                 if (board.checkOver() == true && leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
                     leaderboard();
@@ -327,8 +324,8 @@ int main() {
         game.draw(debug);
         game.draw(playButton);
         game.draw(leaderboardSprite);
-        drawCounter(game, digitsTx, numMines, numFlags, numCol, numRow);
-        drawTimer(game, digitsTx, numCol, numRow, timer.getTime());
+        drawCounter(game, txm.getTx("digitsTx"), numMines, numFlags, numCol, numRow);
+        drawTimer(game, txm.getTx("digitsTx"), numCol, numRow, timer.getTime());
         game.display();
     }
 

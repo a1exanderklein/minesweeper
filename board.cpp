@@ -1,6 +1,6 @@
 #include "board.h"
 
-Board::Board(sf::RenderWindow& window, int numMines, float numTiles, int numCol, int numRow) : window(window){
+Board::Board(sf::RenderWindow& window, TextureManager& txm, int numMines, float numTiles, int numCol, int numRow) : window(window){
     this -> numCol = numCol;
     this -> numRow = numRow;
     this -> numMines = numMines;
@@ -9,7 +9,7 @@ Board::Board(sf::RenderWindow& window, int numMines, float numTiles, int numCol,
     float size = 32.0f;
     for (int i = 0; i < numCol; i++) {
         for (int j = 0; j < numRow; j++) {
-            Tile tile(sf::Vector2f(i * size, j * size));
+            Tile tile(sf::Vector2f(i * size, j * size), txm);
             tiles.push_back(tile);
         }
     }
@@ -34,12 +34,12 @@ Board::Board(sf::RenderWindow& window, int numMines, float numTiles, int numCol,
         tiles[i].setTouching(number);
     }
 }
-void Board::reset() {
+void Board::reset(TextureManager& txm) {
     tiles.clear();
     float size = 32.0f;
     for (int i = 0; i < numCol; i++) {
         for (int j = 0; j < numRow; j++) {
-            Tile tile(sf::Vector2f(i * size, j * size));
+            Tile tile(sf::Vector2f(i * size, j * size), txm);
             tiles.push_back(tile);
         }
     }
@@ -84,6 +84,14 @@ int Board::getNumFlags() {
 
 void Board::setFlag(int tileNumber) {
     tiles[tileNumber].flag();
+}
+
+void Board::setWinFlag() {
+    for (int i = 0; i < tiles.size(); i++) {
+        if (tiles[i].getMine() == true) {
+            tiles[i].flag();
+        }
+    }    
 }
 
 void Board::setReveal(int tileNumber) {
