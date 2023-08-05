@@ -161,8 +161,8 @@ void Board::setAdjacent() {
         }
         if (x == 0 && y == numRow - 1) { //Bottom Left
             tiles[i].addAdjacent(&tiles[i - 1], 1);
-            tiles[i].addAdjacent(&tiles[i * 2], 2);
-            tiles[i].addAdjacent(&tiles[(i * 2) + 1], 3);
+            tiles[i].addAdjacent(&tiles[i - numRow], 2);
+            tiles[i].addAdjacent(&tiles[i - numRow + 1], 3);
         }
         if (x == numCol - 1 && y == numRow - 1) { //Bottom Right
             tiles[i].addAdjacent(&tiles[i - 1], 1);
