@@ -113,6 +113,7 @@ void Board::recursion(int tileNumber) {
     if (current->minesTouching == 0 && current->getMine() == false) {
         for (int i = 0; i < 8; i++) {
             if (current->adjacent[i] != nullptr) {
+                //index of tile given by pointer subtraction
                 int adjacentIndex = current->adjacent[i] - &tiles[0];
                 recursion(adjacentIndex);
             }
@@ -212,11 +213,3 @@ void Board::setAdjacent() {
         }
     }
 }
-
-// void Board::debug(sf::RenderWindow& window) {
-//     for (int i = 0; i < tiles.size(); i++) {
-//         if (tiles[i].getMine() == true) {
-//             tiles[i].debugMine(window);
-//         }
-//     }
-// }

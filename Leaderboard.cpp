@@ -43,9 +43,6 @@ void Leaderboard::operator()(){
     sf::Text messageTitle("LEADERBOARD", font, 20);
     setText(messageTitle, (width/2.0f), (height/2.0f) - 120, true);
     messageTitle.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-    //Names
-
     
     while (leaderboard.isOpen()) {
         sf::Event event;

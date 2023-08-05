@@ -15,7 +15,6 @@ public:
     void setWinFlag();
     void setReveal(int tileNumber);
     void setAdjacent();
-    // void debug(sf::RenderWindow& window);
     bool checkOver();
     bool checkWin();
     void recursion(int tileNumber);
