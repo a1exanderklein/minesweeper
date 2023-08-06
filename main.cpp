@@ -193,39 +193,21 @@ int main() {
     buttonDeck.setFillColor(sf::Color::White);
 
     //Buttons
-    // sf::Texture happyFaceTx;
-    // happyFaceTx.loadFromFile("files/images/face_happy.png");
-    // sf::Texture winFaceTx;
-    // winFaceTx.loadFromFile("files/images/face_win.png");
-    // sf::Texture loseFaceTx;
-    // loseFaceTx.loadFromFile("files/images/face_lose.png");
     sf::Sprite happyFace;
     happyFace.setTexture(txm.getTx("happyFaceTx"));
     happyFace.setPosition( ((numCol / 2.0) * 32) - 32, 32 *(numRow + 0.5f) );
 
-    // sf::Texture debugTx;
-    // debugTx.loadFromFile("files/images/debug.png");
     sf::Sprite debug;
     debug.setTexture(txm.getTx("debugTx"));
     debug.setPosition( (numCol * 32) - 304, 32 * (numRow + 0.5f) );
 
-    // sf::Texture pauseTx;
-    // pauseTx.loadFromFile("files/images/pause.png");
-    // sf::Texture playTx;
-    // playTx.loadFromFile("files/images/play.png");
     sf::Sprite playButton;
     playButton.setTexture(txm.getTx("pauseTx"));
     playButton.setPosition( (numCol * 32) - 240, 32 * (numRow + 0.5f) );
 
-    // sf::Texture leaderboardTx;
-    // leaderboardTx.loadFromFile("files/images/leaderboard.png");
     sf::Sprite leaderboardSprite;
     leaderboardSprite.setTexture(txm.getTx("leaderboardTx"));
     leaderboardSprite.setPosition( (numCol * 32) - 176, 32 * (numRow + 0.5f) );
-
-    //Digits
-    // sf::Texture digitsTx;
-    // digitsTx.loadFromFile("files/images/digits.png");
 
     Timer timer;
     timer.start();
@@ -300,6 +282,8 @@ int main() {
                     board.reset(txm);
                     finalTime = "";
                     timer.reset();
+                    paused = false;
+                    playButton.setTexture(txm.getTx("pauseTx"));
                     timer.start();
                     happyFace.setTexture(txm.getTx("happyFaceTx"));
                     gameLost = false;
@@ -310,7 +294,9 @@ int main() {
                     board.drawBoard(true, false, false );
                     game.display();
                     leaderboard();
-                    timer.resume();                            
+                    if (paused == false) {
+                        timer.resume();                         
+                    }
                 }
                 if (board.checkOver() == true && leaderboardSprite.getGlobalBounds().contains(clickCoordinates.x, clickCoordinates.y)) {
                     leaderboard();
