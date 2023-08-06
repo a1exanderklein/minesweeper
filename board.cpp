@@ -7,9 +7,9 @@ Board::Board(sf::RenderWindow& window, TextureManager& txm, int numMines, float 
     this -> numTiles = numTiles;
 
     float size = 32.0f;
-    for (int i = 0; i < numCol; i++) {
-        for (int j = 0; j < numRow; j++) {
-            Tile tile(sf::Vector2f(i * size, j * size), txm);
+    for (int i = 0; i < numRow; i++) {
+        for (int j = 0; j < numCol; j++) {
+            Tile tile(sf::Vector2f(j * size, i * size), txm);
             tiles.push_back(tile);
         }
     }
@@ -37,9 +37,9 @@ Board::Board(sf::RenderWindow& window, TextureManager& txm, int numMines, float 
 void Board::reset(TextureManager& txm) {
     tiles.clear();
     float size = 32.0f;
-    for (int i = 0; i < numCol; i++) {
-        for (int j = 0; j < numRow; j++) {
-            Tile tile(sf::Vector2f(i * size, j * size), txm);
+    for (int i = 0; i < numRow; i++) {
+        for (int j = 0; j < numCol; j++) {
+            Tile tile(sf::Vector2f(j * size, i * size), txm);
             tiles.push_back(tile);
         }
     }
@@ -117,7 +117,10 @@ void Board::recursion(int tileNumber) {
             if (current->adjacent[i] != nullptr) {
                 //index of tile given by pointer subtraction
                 int adjacentIndex = current->adjacent[i] - &tiles[0];
-                recursion(adjacentIndex);
+                //ensures its within board range
+                if (adjacentIndex >= 0 && adjacentIndex < tiles.size()) {
+                    recursion(adjacentIndex);
+                }
             }
         }
     }
@@ -148,70 +151,76 @@ bool Board::checkWin() {
 
 void Board::setAdjacent() {
     for (int i = 0; i < tiles.size(); i++) {
-        int x = i / numRow;
-        int y = i % numRow;   
-        //Corners
+        int x = i % numCol;
+        int y = i / numCol;
+        
+        // Corners
         if (x == 0 && y == 0) { //Top Left
-            tiles[i].addAdjacent(&tiles[numRow], 3);
-            tiles[i].addAdjacent(&tiles[i + numRow], 4);
-            tiles[i].addAdjacent(&tiles[i + 1], 5);
+            tiles[i].addAdjacent(&tiles[i + 1], 3);
+            tiles[i].addAdjacent(&tiles[i + numCol + 1], 4);
+            tiles[i].addAdjacent(&tiles[numCol], 5);
+            continue;
         }
         if (x == numCol - 1 && y == 0) { //Top Right
-            tiles[i].addAdjacent(&tiles[i - numRow], 7);
-            tiles[i].addAdjacent(&tiles[i - numRow + 1], 6);
-            tiles[i].addAdjacent(&tiles[i + 1], 5);
+            tiles[i].addAdjacent(&tiles[i - 1], 7);
+            tiles[i].addAdjacent(&tiles[i + numCol - 1], 6);
+            tiles[i].addAdjacent(&tiles[i + numCol ], 5);
+            continue;
         }
         if (x == 0 && y == numRow - 1) { //Bottom Left
-            tiles[i].addAdjacent(&tiles[i - 1], 1);
-            tiles[i].addAdjacent(&tiles[i - numRow], 2);
-            tiles[i].addAdjacent(&tiles[i - numRow + 1], 3);
+            tiles[i].addAdjacent(&tiles[i - numCol], 1);
+            tiles[i].addAdjacent(&tiles[i - numCol + 1], 2);
+            tiles[i].addAdjacent(&tiles[i + 1], 3);
+            continue;
         }
         if (x == numCol - 1 && y == numRow - 1) { //Bottom Right
-            tiles[i].addAdjacent(&tiles[i - 1], 1);
-            tiles[i].addAdjacent(&tiles[i - numRow - 1], 0);
-            tiles[i].addAdjacent(&tiles[i - numRow], 7);
+            tiles[i].addAdjacent(&tiles[i - numCol], 1);
+            tiles[i].addAdjacent(&tiles[i - numCol - 1], 0);
+            tiles[i].addAdjacent(&tiles[i - 1], 7);
+            continue;
         } 
 
-        //Sides
+        // Sides
         else if (y == 0) { // Top side
-            tiles[i].addAdjacent(&tiles[i - numRow], 7);
-            tiles[i].addAdjacent(&tiles[i - numRow + 1], 6);
-            tiles[i].addAdjacent(&tiles[i + 1], 5);
-            tiles[i].addAdjacent(&tiles[i + numRow + 1], 4);
-            tiles[i].addAdjacent(&tiles[i + numRow], 3);
+            tiles[i].addAdjacent(&tiles[i - 1], 7);
+            tiles[i].addAdjacent(&tiles[i + numCol - 1], 6);
+            tiles[i].addAdjacent(&tiles[i + numCol], 5);
+            tiles[i].addAdjacent(&tiles[i + numCol + 1], 4);
+            tiles[i].addAdjacent(&tiles[i + 1], 3);
         }
         else if (y == numRow - 1) { // Bottom side
-            tiles[i].addAdjacent(&tiles[i - numRow], 7);
-            tiles[i].addAdjacent(&tiles[i - numRow - 1], 0);
-            tiles[i].addAdjacent(&tiles[i - 1], 1);
-            tiles[i].addAdjacent(&tiles[i + numRow - 1], 2);
-            tiles[i].addAdjacent(&tiles[i + numRow], 3);
+            tiles[i].addAdjacent(&tiles[i - 1], 7);
+            tiles[i].addAdjacent(&tiles[i - numCol - 1], 0);
+            tiles[i].addAdjacent(&tiles[i - numCol], 1);
+            tiles[i].addAdjacent(&tiles[i - numCol + 1], 2);
+            tiles[i].addAdjacent(&tiles[i + 1], 3);
         }
         else if (x == 0) { // Left side
-            tiles[i].addAdjacent(&tiles[i - 1], 1);
-            tiles[i].addAdjacent(&tiles[i + numRow - 1], 2);
-            tiles[i].addAdjacent(&tiles[i + numRow], 3);
-            tiles[i].addAdjacent(&tiles[i + numRow + 1], 4);
-            tiles[i].addAdjacent(&tiles[i + 1], 5);
+            tiles[i].addAdjacent(&tiles[i - numCol], 1);
+            tiles[i].addAdjacent(&tiles[i - numCol + 1], 2);
+            tiles[i].addAdjacent(&tiles[i + 1], 3);
+            tiles[i].addAdjacent(&tiles[i + numCol + 1], 4);
+            tiles[i].addAdjacent(&tiles[i + numCol], 5);
         }
         else if (x == numCol - 1) { // Right side
-            tiles[i].addAdjacent(&tiles[i - 1], 1);
-            tiles[i].addAdjacent(&tiles[i - numRow - 1], 0);
-            tiles[i].addAdjacent(&tiles[i - numRow], 7);
-            tiles[i].addAdjacent(&tiles[i - numRow + 1], 6);
-            tiles[i].addAdjacent(&tiles[i + 1], 5);
+            tiles[i].addAdjacent(&tiles[i - numCol], 1);
+            tiles[i].addAdjacent(&tiles[i - numCol - 1], 0);
+            tiles[i].addAdjacent(&tiles[i - 1], 7);
+            tiles[i].addAdjacent(&tiles[i + numCol - 1], 6);
+            tiles[i].addAdjacent(&tiles[i + numCol], 5);
         }
 
-        //Remaining
+        // Remaining
         else {
-            tiles[i].addAdjacent(&tiles[i - numRow - 1], 0);
-            tiles[i].addAdjacent(&tiles[i - 1], 1);
-            tiles[i].addAdjacent(&tiles[i + numRow - 1], 2);
-            tiles[i].addAdjacent(&tiles[i + numRow], 3);
-            tiles[i].addAdjacent(&tiles[i + numRow + 1], 4);
-            tiles[i].addAdjacent(&tiles[i + 1], 5);
-            tiles[i].addAdjacent(&tiles[i - numRow + 1], 6);
-            tiles[i].addAdjacent(&tiles[i - numRow], 7);
+            tiles[i].addAdjacent(&tiles[i - numCol - 1], 0);
+            tiles[i].addAdjacent(&tiles[i - numCol], 1);
+            tiles[i].addAdjacent(&tiles[i - numCol + 1], 2);
+            tiles[i].addAdjacent(&tiles[i + 1], 3);
+            tiles[i].addAdjacent(&tiles[i + numCol + 1], 4);
+            tiles[i].addAdjacent(&tiles[i + numCol], 5);
+            tiles[i].addAdjacent(&tiles[i + numCol - 1], 6);
+            tiles[i].addAdjacent(&tiles[i - 1], 7);
         }
     }
 }
+

@@ -64,16 +64,17 @@ void Leaderboard::drawLeaders(sf::RenderWindow& window) {
     sf::Text leaderText("", font, 18);
     leaderText.setStyle(sf::Text::Bold);
     int rank = 1;
+    string leaderRow = "";
     map<string, string>::iterator iter;
     for (iter = leaders.begin(); iter != leaders.end() && rank < 6; iter++) {
         string time = iter->first;
         string name = iter->second;
-        string leaderRow = to_string(rank) + ".\t" + time + "\t" + name;
-        leaderText.setString(leaderRow);
-        setText(leaderText, width/5.0f, height/5.0f + 20 + (40 * (rank - 1)), false);
-        window.draw(leaderText);
+        leaderRow += to_string(rank) + ".\t" + time + "\t" + name + "\n\n";
         rank++;
     }
+    leaderText.setString(leaderRow);
+    setText(leaderText, width/2.0f, height/2.0f + 20, true);
+    window.draw(leaderText);
 }
 
 void Leaderboard::setText(sf::Text& text, float x, float y, bool center) {

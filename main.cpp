@@ -252,14 +252,15 @@ int main() {
                         if (event.mouseButton.button == sf::Mouse::Right) {
                             int col = static_cast<int>(clickCoordinates.x) / 32;
                             int row = static_cast<int>(clickCoordinates.y) / 32;
-                            int tileNumber = static_cast<int>(numRow * col + row);
+                            int tileNumber = static_cast<int>(numCol * row + col);
                             board.setFlag(tileNumber);
                         }
                         if (event.mouseButton.button == sf::Mouse::Left) {
                             int col = static_cast<int>(clickCoordinates.x) / 32;
                             int row = static_cast<int>(clickCoordinates.y) / 32;
-                            int tileNumber = static_cast<int>(numRow * col + row);
+                            int tileNumber = static_cast<int>(numCol * row + col);
                             board.setReveal(tileNumber);
+                            // cout << "Tile Number : " << tileNumber << endl;
                             board.checkOver();
                             if (board.checkOver() == true) {
                                 gameLost = true;
